@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css">
+        <link rel="stylesheet" href="css/qgis2web.css">
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        </style>
+        <title></title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="data/ne_10m_coastline_0.js"></script>
+        <script src="data/PetroleumWells_1.js"></script>
+        <script>
+        var highlightLayer;
+        function highlightFeature(e) {
+            highlightLayer = e.target;
+            highlightLayer.openPopup();
+        }
+        var map = L.map('map', {
+            zoomControl:true, maxZoom:28, minZoom:1
+        }).fitBounds([[-20.909747970642304,115.19642211781711],[-8.239166113034809,138.82142211781706]]);
+        var hash = new L.Hash(map);
+        map.attributionControl.addAttribution('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a>');
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+        }
+        function pop_ne_10m_coastline_0(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['scalerank'] !== null ? Autolinker.link(String(feature.properties['scalerank'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['featurecla'] !== null ? Autolinker.link(String(feature.properties['featurecla'])) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_ne_10m_coastline_0_0() {
+            return {
+                pane: 'pane_ne_10m_coastline_0',
+                opacity: 1,
+                color: 'rgba(26,97,144,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 1.0,
+                fillOpacity: 0,
+            }
+        }
+        map.createPane('pane_ne_10m_coastline_0');
+        map.getPane('pane_ne_10m_coastline_0').style.zIndex = 400;
+        map.getPane('pane_ne_10m_coastline_0').style['mix-blend-mode'] = 'normal';
+        var layer_ne_10m_coastline_0 = new L.geoJson(json_ne_10m_coastline_0, {
+            attribution: '<a href=""></a>',
+            pane: 'pane_ne_10m_coastline_0',
+            onEachFeature: pop_ne_10m_coastline_0,
+            style: style_ne_10m_coastline_0_0,
+        });
+        bounds_group.addLayer(layer_ne_10m_coastline_0);
+        map.addLayer(layer_ne_10m_coastline_0);
+        function pop_PetroleumWells_1(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['WELL_NAME'] !== null ? Autolinker.link(String(feature.properties['WELL_NAME'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['UWI'] !== null ? Autolinker.link(String(feature.properties['UWI'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['STATUS'] !== null ? Autolinker.link(String(feature.properties['STATUS'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['CLASS'] !== null ? Autolinker.link(String(feature.properties['CLASS'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['FIELD'] !== null ? Autolinker.link(String(feature.properties['FIELD'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['LEASE_NO'] !== null ? Autolinker.link(String(feature.properties['LEASE_NO'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['OPERATOR'] !== null ? Autolinker.link(String(feature.properties['OPERATOR'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['BASIN'] !== null ? Autolinker.link(String(feature.properties['BASIN'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['EXTRACT_DA'] !== null ? Autolinker.link(String(feature.properties['EXTRACT_DA'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['SHAPE'] !== null ? Autolinker.link(String(feature.properties['SHAPE'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>OBJECTID</strong><br />' + (feature.properties['OBJECTID'] !== null ? Autolinker.link(String(feature.properties['OBJECTID'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['LONG'] !== null ? Autolinker.link(String(feature.properties['LONG'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['LAT'] !== null ? Autolinker.link(String(feature.properties['LAT'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['SPUD_DATE'] !== null ? Autolinker.link(String(feature.properties['SPUD_DATE'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['RIG_RELEAS'] !== null ? Autolinker.link(String(feature.properties['RIG_RELEAS'])) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_PetroleumWells_1_0() {
+            return {
+                pane: 'pane_PetroleumWells_1',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(219,147,250,1.0)',
+            }
+        }
+        map.createPane('pane_PetroleumWells_1');
+        map.getPane('pane_PetroleumWells_1').style.zIndex = 401;
+        map.getPane('pane_PetroleumWells_1').style['mix-blend-mode'] = 'normal';
+        var layer_PetroleumWells_1 = new L.geoJson(json_PetroleumWells_1, {
+            attribution: '<a href=""></a>',
+            pane: 'pane_PetroleumWells_1',
+            onEachFeature: pop_PetroleumWells_1,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_PetroleumWells_1_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_PetroleumWells_1);
+        map.addLayer(layer_PetroleumWells_1);
+        var baseMaps = {};
+        L.control.layers(baseMaps,{'<img src="legend/PetroleumWells_1.png" /> Petroleum Wells': layer_PetroleumWells_1,'<img src="legend/ne_10m_coastline_0.png" /> ne_10m_coastline': layer_ne_10m_coastline_0,}).addTo(map);
+        setBounds();
+        </script>
+    </body>
+</html>
