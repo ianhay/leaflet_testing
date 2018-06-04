@@ -8,6 +8,7 @@
         <meta name="apple-mobile-web-app-capable" content="yes">
         <link rel="stylesheet" href="css/leaflet.css">
         <link rel="stylesheet" href="css/qgis2web.css">
+        <link rel="stylesheet" href="css/Control.OSMGeocoder.css">
         <style>
         html, body, #map {
             width: 100%;
@@ -30,31 +31,43 @@
         <script src="js/rbush.min.js"></script>
         <script src="js/labelgun.min.js"></script>
         <script src="js/labels.js"></script>
-        <script src="data/ne_10m_coastline_0.js"></script>
-        <script src="data/PetroleumWells_1.js"></script>
+        <script src="js/Control.OSMGeocoder.js"></script>
+        <script src="data/ne_10m_coastline_1.js"></script>
+        <script src="data/PetroleumWells_2.js"></script>
         <script>
         var highlightLayer;
         function highlightFeature(e) {
             highlightLayer = e.target;
-            highlightLayer.openPopup();
+
+            if (e.target.feature.geometry.type === 'LineString') {
+              highlightLayer.setStyle({
+                color: '#ffff00',
+              });
+            } else {
+              highlightLayer.setStyle({
+                fillColor: '#ffff00',
+                fillOpacity: 1
+              });
+            }
         }
         var map = L.map('map', {
             zoomControl:true, maxZoom:28, minZoom:1
-        }).fitBounds([[-20.909747970642304,115.19642211781711],[-8.239166113034809,138.82142211781706]]);
+        }).fitBounds([[-18.075657199620856,122.93772809897189],[-16.79565719962111,125.04310979902561]]);
         var hash = new L.Hash(map);
         map.attributionControl.addAttribution('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a>');
         var bounds_group = new L.featureGroup([]);
         function setBounds() {
         }
-        function pop_ne_10m_coastline_0(feature, layer) {
+        var overlay_OSMStandard_0 = L.tileLayer('http://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            opacity: 1.0
+        });
+        overlay_OSMStandard_0.addTo(map);
+        map.addLayer(overlay_OSMStandard_0);
+        function pop_ne_10m_coastline_1(feature, layer) {
             layer.on({
                 mouseout: function(e) {
-                    if (typeof layer.closePopup == 'function') {
-                        layer.closePopup();
-                    } else {
-                        layer.eachLayer(function(feature){
-                            feature.closePopup()
-                        });
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
                     }
                 },
                 mouseover: highlightFeature,
@@ -70,9 +83,9 @@
             layer.bindPopup(popupContent, {maxHeight: 400});
         }
 
-        function style_ne_10m_coastline_0_0() {
+        function style_ne_10m_coastline_1_0() {
             return {
-                pane: 'pane_ne_10m_coastline_0',
+                pane: 'pane_ne_10m_coastline_1',
                 opacity: 1,
                 color: 'rgba(26,97,144,1.0)',
                 dashArray: '',
@@ -82,26 +95,22 @@
                 fillOpacity: 0,
             }
         }
-        map.createPane('pane_ne_10m_coastline_0');
-        map.getPane('pane_ne_10m_coastline_0').style.zIndex = 400;
-        map.getPane('pane_ne_10m_coastline_0').style['mix-blend-mode'] = 'normal';
-        var layer_ne_10m_coastline_0 = new L.geoJson(json_ne_10m_coastline_0, {
+        map.createPane('pane_ne_10m_coastline_1');
+        map.getPane('pane_ne_10m_coastline_1').style.zIndex = 401;
+        map.getPane('pane_ne_10m_coastline_1').style['mix-blend-mode'] = 'normal';
+        var layer_ne_10m_coastline_1 = new L.geoJson(json_ne_10m_coastline_1, {
             attribution: '<a href=""></a>',
-            pane: 'pane_ne_10m_coastline_0',
-            onEachFeature: pop_ne_10m_coastline_0,
-            style: style_ne_10m_coastline_0_0,
+            pane: 'pane_ne_10m_coastline_1',
+            onEachFeature: pop_ne_10m_coastline_1,
+            style: style_ne_10m_coastline_1_0,
         });
-        bounds_group.addLayer(layer_ne_10m_coastline_0);
-        map.addLayer(layer_ne_10m_coastline_0);
-        function pop_PetroleumWells_1(feature, layer) {
+        bounds_group.addLayer(layer_ne_10m_coastline_1);
+        map.addLayer(layer_ne_10m_coastline_1);
+        function pop_PetroleumWells_2(feature, layer) {
             layer.on({
                 mouseout: function(e) {
-                    if (typeof layer.closePopup == 'function') {
-                        layer.closePopup();
-                    } else {
-                        layer.eachLayer(function(feature){
-                            feature.closePopup()
-                        });
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
                     }
                 },
                 mouseover: highlightFeature,
@@ -152,13 +161,19 @@
                     <tr>\
                         <td colspan="2">' + (feature.properties['RIG_RELEAS'] !== null ? Autolinker.link(String(feature.properties['RIG_RELEAS'])) : '') + '</td>\
                     </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>hotlink</strong><br />' + (feature.properties['hotlink'] !== null ? Autolinker.link(String(feature.properties['hotlink'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['hyperlink'] !== null ? Autolinker.link(String(feature.properties['hyperlink'])) : '') + '</td>\
+                    </tr>\
                 </table>';
             layer.bindPopup(popupContent, {maxHeight: 400});
         }
 
-        function style_PetroleumWells_1_0() {
+        function style_PetroleumWells_2_0() {
             return {
-                pane: 'pane_PetroleumWells_1',
+                pane: 'pane_PetroleumWells_2',
                 radius: 4.0,
                 opacity: 1,
                 color: 'rgba(35,35,35,1.0)',
@@ -171,25 +186,31 @@
                 fillColor: 'rgba(219,147,250,1.0)',
             }
         }
-        map.createPane('pane_PetroleumWells_1');
-        map.getPane('pane_PetroleumWells_1').style.zIndex = 401;
-        map.getPane('pane_PetroleumWells_1').style['mix-blend-mode'] = 'normal';
-        var layer_PetroleumWells_1 = new L.geoJson(json_PetroleumWells_1, {
+        map.createPane('pane_PetroleumWells_2');
+        map.getPane('pane_PetroleumWells_2').style.zIndex = 402;
+        map.getPane('pane_PetroleumWells_2').style['mix-blend-mode'] = 'normal';
+        var layer_PetroleumWells_2 = new L.geoJson(json_PetroleumWells_2, {
             attribution: '<a href=""></a>',
-            pane: 'pane_PetroleumWells_1',
-            onEachFeature: pop_PetroleumWells_1,
+            pane: 'pane_PetroleumWells_2',
+            onEachFeature: pop_PetroleumWells_2,
             pointToLayer: function (feature, latlng) {
                 var context = {
                     feature: feature,
                     variables: {}
                 };
-                return L.circleMarker(latlng, style_PetroleumWells_1_0(feature));
+                return L.circleMarker(latlng, style_PetroleumWells_2_0(feature));
             },
         });
-        bounds_group.addLayer(layer_PetroleumWells_1);
-        map.addLayer(layer_PetroleumWells_1);
+        bounds_group.addLayer(layer_PetroleumWells_2);
+        map.addLayer(layer_PetroleumWells_2);
+        var osmGeocoder = new L.Control.OSMGeocoder({
+            collapsed: false,
+            position: 'topright',
+            text: 'Search',
+        });
+        osmGeocoder.addTo(map);
         var baseMaps = {};
-        L.control.layers(baseMaps,{'<img src="legend/PetroleumWells_1.png" /> Petroleum Wells': layer_PetroleumWells_1,'<img src="legend/ne_10m_coastline_0.png" /> ne_10m_coastline': layer_ne_10m_coastline_0,}).addTo(map);
+        L.control.layers(baseMaps,{'<img src="legend/PetroleumWells_2.png" /> Petroleum Wells': layer_PetroleumWells_2,'<img src="legend/ne_10m_coastline_1.png" /> ne_10m_coastline': layer_ne_10m_coastline_1,"OSM Standard": overlay_OSMStandard_0,}).addTo(map);
         setBounds();
         </script>
     </body>
